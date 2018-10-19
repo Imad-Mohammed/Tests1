@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<!--
+المقابلات!👏
+بقي لديك خطوة واحدة لكي تكون معنا في المعسكر!! 🎉
+ يرجى حل اكثر عدد من الأسألة الأتية لكي نكون فكرة عن امكانياتكم🧐
+و ارفع الحل على موقع Github و ارسال الرابط لنا على هذا الايميل
+يمكنك استخدام اي لغة برمجة تتقنها لحل المشكلة. 👨‍💻
+يجب ان يحتوي الحل على شرح لكل خطوات حل المشكلة.🤓
+يجب ان تقوم بأجراء الاختبار وارسال النتائج قبل يوم ٢٠ اكتوبر.
+عكس ذلك لن تتمكن من المشاركة في معسكر فكرة كامبس.
+
+السؤال الاول:
+Write a function that gets user id and returns his posts with their comments in one JSON object
+you can fetch the posts from this API: https://jsonplaceholder.typicode.com/posts
+and their comments from this API: https://jsonplaceholder.typicode.com/comments
+
+السؤال الثاني:
+Write a program that accepts an array of numbers and returns an array of numbers in written form e.g. 
+[1,4,6] → [“one”, “four”, “six”]
+[0,0,6,2,7] → [“zero”, “zero”, “six”,"two","seven"]
+[5,4,3,2,1,5,8] → ["five", "four", "three", "two", "one", "five","eight"]
+
+السؤال الثالث ( يحتوي على فايل ستجده في ملحقات الايميل ):
+write a program that gets the data from the oscar.csv file and:
+print name of the actor who has more Oscars from the others.
+print name of the oldest actor who got the Oscar, in what year and for what movie.
+print the name of the actor who got the more than Oscar in a row.
+please note that the CSV file's data are ordered like this ( "Index", "Year", "Age", "Name", "Movie" ).
+
+السؤال الرابع:
+Write a function that combines two lists by alternatingly taking elements, e.g.
+[a,b,c], [1,2,3] → [a,1,b,2,c,3].
+[1,2,5,8,0], [9,4,8,7,6] → [1, 9, 2, 4, 5, 8, 8, 7, 0, 6].
+-->
+<html>
+    <head>
+        <title>FikraCamps Task</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+
+            #left{
+                width:20%;
+            }
+            #right{
+                position: absolute;
+                right: 0;
+                top: 10px;
+                width:80%;
+            }
+            .button{
+                position: absolute;
+                right: 0px;
+            }
+            .posts{
+                width:70%;
+            }
+            .post{
+                margin: 12px;
+                padding: 4px;
+                border: 1px #444 dashed;
+                background-color: #c6cbe3;
+            }
+            .title{
+                align-content: center;
+                text-align: center;
+                font-size: 18px;
+                font-weight: bold;
+            }
+            .comments{
+                margin: 3px;
+                background-color: whitesmoke;
+                border: 1px #116ea6 dashed;
+            }
+            .comme{
+                background-color: white;
+                margin: 6px;
+            }
+            .name{
+                display: inline-block;
+                color:#1990DC;
+                font-size: 14;
+                font-weight: bold;
+            }
+            .name:hover{
+                cursor: pointer;
+            }
+
+            .email{
+                float: right;
+                color: blue;
+            }
+            .email:hover{
+                cursor: pointer;
+            }
+
+        </style>
+    </head>
+    <body>
+        <input type="button" value="Run The Function" onclick="run()" class="button"> 
+        <div  id="left" class="">
+            <select id="users" onchange="get(this.value)">
+                <option value="0" disabled selected hidden>Select</option>
+                <!--                <option value="1"  >User 1</option>
+                                <option value="2"  >User 2</option>-->
+            </select> 
+        </div>
+        <div id="right" class="">       
+            <div  class="posts" id="posts">
+                <div  class="comments">
+
+                </div>
+            </div>
+        </div>
+
+        <script>
+            // run();
+            var postes;
+            var comments;
+            function run() {
+                var sel = document.getElementById("users");
+                sel.innerHTML = " <option value='0' disabled selected hidden>Select A User</option>";
+                xmlhttp = new XMLHttpRequest();
+                xmlhttp.open("GET", "https://jsonplaceholder.typicode.com/posts", true);
+                xmlhttp.send();
+                xmlhttp.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        //console.log(this.responseText);
+                        posts = JSON.parse(this.responseText);
+                        //console.log(myObj);
+                        //console.log(myObj.length);
+                        var arr = []; //i, j,
+                        for (i = 0; i < posts.length; i++) {
+                            var trig = 1;
+                            for (j = 0; j <= arr.length; j++) {
+                                if (arr[j] == posts[i]["userId"]) {
+                                    trig = 0;
+                                }
+                            }
+                            if (trig) {
+                                arr.push(posts[i]["userId"]);
+                            }
+                        }
+                        for (i = 0; i < arr.length; i++) {
+                            var option = document.createElement('option');
+                            option.text = "User " + arr[i];
+                            option.value = arr[i];
+                            sel.add(option);
+                        }
+                        // console.log(arr);
+                    }
+                };
+
+                xmlhttp2 = new XMLHttpRequest();
+                xmlhttp2.open("GET", "https://jsonplaceholder.typicode.com/comments", true);
+                xmlhttp2.send();
+                xmlhttp2.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        comments = JSON.parse(this.responseText);
+                    }
+                };
+            }
+
+
+            function get(value) {
+
+                var pos = document.getElementById("posts");
+                pos.innerHTML = "";
+                for (i = 0; i < posts.length; i++) {
+                    if (value == posts[i]["userId"]) {
+                        var idd = posts[i]["id"];
+                        var post = document.createElement('div');
+                        post.id = "post" + idd;
+                        post.className = "post";
+                        pos.appendChild(post);
+
+                        var pos1 = document.getElementById("post" + idd);
+                        var title = document.createElement('div');
+                        title.innerHTML = posts[i]["title"];
+                        title.className = "title";
+                        pos1.appendChild(title);
+
+                        var body1 = document.createElement('div');
+                        body1.innerHTML = posts[i]["body"];
+                        body1.className = "body";
+                        pos1.appendChild(body1);
+
+                        var comments1 = document.createElement('div');
+                        comments1.innerHTML = "";
+                        comments1.className = "comments";
+                        comments1.id = "comments" + idd;
+                        pos1.appendChild(comments1);
+
+
+                        var comments2 = document.getElementById("comments" + idd);
+
+                        for (j = 0; j < comments.length; j++) {
+                            if (comments[j]["postId"] == idd) {
+                                var comment = document.createElement('div');
+                                comment.id = "comment" + comments[j]["id"];
+                                comment.className = "comme";
+                                comments2.appendChild(comment);
+
+                                var commen = document.getElementById("comment" + comments[j]["id"]);
+                                var body2 = document.createElement('div');
+                                body2.className = "body2";
+                                body2.innerHTML = comments[j]["body"];
+                                commen.appendChild(body2);
+
+                                var name = document.createElement('div');
+                                name.className = "name";
+                                name.innerHTML = comments[j]["name"];
+                                commen.appendChild(name);
+
+
+                                var email = document.createElement('div');
+                                email.className = "email";
+                                email.innerHTML = comments[j]["email"];
+                                commen.appendChild(email);
+
+                            }
+                        }
+                    }
+                }
+            }
+
+        </script>
+    </body>
+</html>
